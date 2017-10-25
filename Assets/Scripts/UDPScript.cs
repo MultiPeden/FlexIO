@@ -10,11 +10,13 @@ using System.Text;
 using System;
 using System.Threading;
 
+
 public class UDPScript : MonoBehaviour {
 
     private Text instruction;
 
     private String message;
+    private bool msgUpdated;
 
     Thread receiveThread;
     UdpClient client;
@@ -26,6 +28,8 @@ public class UDPScript : MonoBehaviour {
         instruction = GetComponent<Text>();
         instruction.text = "started";
         ReceiveData();
+        msgUpdated = false;
+
     }
 
     // -------------------------------------------------------------------------
@@ -38,6 +42,7 @@ public class UDPScript : MonoBehaviour {
                 try
                 {
                     client.BeginReceive(new AsyncCallback(recv), null);
+
                 }
                 catch (Exception e)
                 {
@@ -58,14 +63,33 @@ public class UDPScript : MonoBehaviour {
 ;
         this.message = Encoding.UTF8.GetString(received);
         client.BeginReceive(new AsyncCallback(recv), null);
+
+        msgUpdated = true;
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-         // instruction.text = "ole " + UnityEngine.Random.Range(0, 10);
-        instruction.text = " " + message;
+        if (msgUpdated) {
+            msgUpdated = false;
+            Debug.Log(message);
+
+
+
+            IRPoint[] irs = JsonHelper.FromJson<IRPoint>(message);
+
+
+
+            if(irs != null)
+                instruction.text = "first coords x = : " + irs[0].x ;
+              //Debug.Log(" first coords x = : " + irs[0].x );
+
+      }
+
+
+
 
     }
 
@@ -73,6 +97,46 @@ public class UDPScript : MonoBehaviour {
     {
         if (client != null)
             client.Close();
+    }
+
+
+
+
+    [Serializable]
+    private class IRPoint
+    {
+        public int id;
+        public int x;
+        public int y;
+    }
+
+    public static class JsonHelper
+    {
+        public static T[] FromJson<T>(string json)
+        {
+            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
+            return wrapper.Items;
+        }
+
+        public static string ToJson<T>(T[] array)
+        {
+            Wrapper<T> wrapper = new Wrapper<T>();
+            wrapper.Items = array;
+            return JsonUtility.ToJson(wrapper);
+        }
+
+        public static string ToJson<T>(T[] array, bool prettyPrint)
+        {
+            Wrapper<T> wrapper = new Wrapper<T>();
+            wrapper.Items = array;
+            return JsonUtility.ToJson(wrapper, prettyPrint);
+        }
+
+        [Serializable]
+        private class Wrapper<T>
+        {
+            public T[] Items;
+        }
     }
 
 }
