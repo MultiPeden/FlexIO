@@ -25,20 +25,7 @@ public class UDPScript : MonoBehaviour {
         message = "";
         instruction = GetComponent<Text>();
         instruction.text = "started";
-        //   init();
         ReceiveData();
-    }
-
-    // -------------------------------------------------------------------------
-    private void init()
-    {
-        receiveThread = new Thread(
-            new ThreadStart(ReceiveData));
-
-        receiveThread.IsBackground = true;
-        receiveThread.Start();
-
-        print("Start");
     }
 
     // -------------------------------------------------------------------------
@@ -48,12 +35,6 @@ public class UDPScript : MonoBehaviour {
 
 
             client = new UdpClient(somePort);
-
-                // do stuff
-              //  instruction.text = "ddata";
-
-               
-
                 try
                 {
                     client.BeginReceive(new AsyncCallback(recv), null);
@@ -63,9 +44,6 @@ public class UDPScript : MonoBehaviour {
               
                     this.message = "Error: " + e.ToString();
                 }
-
-            
-
         }
 
 
@@ -86,19 +64,15 @@ public class UDPScript : MonoBehaviour {
     void Update()
     {
 
-        //  instruction.text = "ole " + UnityEngine.Random.Range(0, 10);
+         // instruction.text = "ole " + UnityEngine.Random.Range(0, 10);
         instruction.text = " " + message;
 
     }
-    
 
     void OnApplicationQuit()
     {
-        receiveThread.Abort();
         if (client != null)
             client.Close();
     }
-    
-
 
 }
