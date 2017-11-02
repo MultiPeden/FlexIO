@@ -120,9 +120,9 @@ public class Triangulator : MonoBehaviour {
 
                 // If you want to texture your terrain, UVs are important,
                 // but I just use a flat color so put in dummy coords
-                uvs.Add(new Vector2(0.0f, 0.0f));
-                uvs.Add(new Vector2(0.0f, 0.0f));
-                uvs.Add(new Vector2(0.0f, 0.0f));
+                uvs.Add(new Vector2((float)triangle.GetVertex(2).X, (float)triangle.GetVertex(2).Y));
+                uvs.Add(new Vector2((float)triangle.GetVertex(1).X, (float)triangle.GetVertex(1).Y));
+                uvs.Add(new Vector2((float)triangle.GetVertex(0).X, (float)triangle.GetVertex(0).Y));
             }
 
             // Create the actual Unity mesh object
