@@ -14,6 +14,8 @@ public class Triangulator : MonoBehaviour {
     // Prefab which is generated for each chunk of the mesh.
     public Transform screenPrefab = null;
 
+    private Mesh screenMesh = null;
+
 
 
 
@@ -59,6 +61,34 @@ public class Triangulator : MonoBehaviour {
 
         MakeMesh();
 
+    }
+
+    void update()
+    {
+        IEnumerator<Vertex> vertexEnumerator = mesh.Vertices.GetEnumerator();
+        Vector3[] vertices = new Vector3[mesh.Vertices.Count];
+        for (int i = 0; i < mesh.Triangles.Count; i++)
+        {
+            if (i == 0)
+            {
+                vertices[i]=(new Vector3(-100,-100, 0));
+            }
+            else
+            {
+                vertices[i] = (new Vector3((float)vertexEnumerator.Current.X, (float)vertexEnumerator.Current.Y, 0));
+            }
+        }
+
+        Mesh newMesh = new Mesh();
+        newMesh.vertices = vertices;
+        newMesh.triangles = screenMesh.triangles;
+        newMesh.normals = screenMesh.normals;
+        newMesh.uv = screenMesh.uv;
+
+
+
+        
+        screenPrefab.GetComponent<MeshFilter>().mesh = newMesh;
     }
 
 
@@ -126,7 +156,7 @@ public class Triangulator : MonoBehaviour {
             }
 
             // Create the actual Unity mesh object
-            Mesh screenMesh = new Mesh();
+            screenMesh = new Mesh();
             screenMesh.vertices = vertices.ToArray();
             screenMesh.uv = uvs.ToArray();
             screenMesh.triangles = triangles.ToArray();
