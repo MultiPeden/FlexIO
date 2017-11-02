@@ -4,6 +4,7 @@ using UnityEngine;
 using TriangleNet.Geometry;
 using TriangleNet.Meshing;
 using TriangleNet.Topology;
+using System;
 
 public class Triangulator : MonoBehaviour {
 
@@ -63,12 +64,41 @@ public class Triangulator : MonoBehaviour {
 
     }
 
-    void update()
+
+        void Update() {
+        //Mesh mesh = GetComponent<MeshFilter>().mesh;
+
+
+        Vector3[] vertices = screenMesh.vertices;
+        int i = 0;
+
+        Vector3 first = vertices[0];
+
+        while (i < vertices.Length) {
+            if (vertices[i] == first) 
+                vertices[i] += Vector3.left * Time.deltaTime;
+            i++;
+        }
+
+        screenMesh.vertices = vertices;
+        screenMesh.RecalculateBounds();
+    }
+
+    void Update2()
     {
         IEnumerator<Vertex> vertexEnumerator = mesh.Vertices.GetEnumerator();
         Vector3[] vertices = new Vector3[mesh.Vertices.Count];
-        for (int i = 0; i < mesh.Triangles.Count; i++)
+
+        int arraycount = mesh.Vertices.Count;
+        for (int i = 0; i < mesh.Vertices.Count; i++)
         {
+
+            if (!vertexEnumerator.MoveNext())
+            {
+                //  stop when last  
+                break;
+            }
+
             if (i == 0)
             {
                 vertices[i]=(new Vector3(-100,-100, 0));
@@ -77,18 +107,25 @@ public class Triangulator : MonoBehaviour {
             {
                 vertices[i] = (new Vector3((float)vertexEnumerator.Current.X, (float)vertexEnumerator.Current.Y, 0));
             }
+            double currentx = vertexEnumerator.Current.X;
+            double currenty = vertexEnumerator.Current.Y;
+
+            int ole = 0;
         }
 
-        Mesh newMesh = new Mesh();
-        newMesh.vertices = vertices;
-        newMesh.triangles = screenMesh.triangles;
-        newMesh.normals = screenMesh.normals;
-        newMesh.uv = screenMesh.uv;
+
+
+
+    //    Mesh newMesh = new Mesh();
+       // newMesh.vertices = vertices;
+      //  newMesh.triangles = screenMesh.triangles;
+       // newMesh.normals = screenMesh.normals;
+       // newMesh.uv = screenMesh.uv;
 
 
 
         
-        screenPrefab.GetComponent<MeshFilter>().mesh = newMesh;
+        screenPrefab.GetComponent<MeshFilter>().mesh = screenMesh;
     }
 
 
@@ -162,13 +199,13 @@ public class Triangulator : MonoBehaviour {
             screenMesh.triangles = triangles.ToArray();
             screenMesh.normals = normals.ToArray();
 
+
             // Instantiate the GameObject which will display this chunk
             Transform screen = Instantiate<Transform>(screenPrefab, transform.position, transform.rotation);
             screen.GetComponent<MeshFilter>().mesh = screenMesh;
             screen.GetComponent<MeshCollider>().sharedMesh = screenMesh;
             screen.transform.parent = transform;
-            
-        
+
     }
 
 
