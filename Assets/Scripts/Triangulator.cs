@@ -1,30 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TriangleNet.Geometry;
-using TriangleNet.Meshing;
 using TriangleNet.Topology;
-using System;
 
-public class Triangulator : MonoBehaviour {
+public class Triangulator : MonoBehaviour
+{
+
+
 
     // The delaunay mesh
-    private TriangleNet.Mesh mesh = null;
+    private TriangleNet.Mesh triangulatorMesh = null;
 
 
     // Prefab which is generated for each chunk of the mesh.
     public Transform screenPrefab = null;
 
+    public Transform handlePrefab = null;
+
+
+    private Transform screen = null;
+
     private Mesh screenMesh = null;
 
+    Dictionary<Vector3, List<int>> dictionary;
 
 
+    /// <summary>
+    /// ///
+    /// </summary>
+
+    Vector3[] verts;
+    Vector3 vertPos;
+    GameObject[] handles;
+
+    UDPScript udpScript;
 
     // Use this for initialization
     void Start()
     {
+        GameObject go = GameObject.Find("UDPScript");
+        udpScript = (UDPScript)go.GetComponent(typeof(UDPScript));
+   
+
+    }
+        
+
+        private void AddHandles()
+    {
+        // add handles to the mesh
+        verts = screenMesh.vertices;
+        foreach (KeyValuePair<Vector3, List<int>> entry in dictionary)
+        {
+            // create handle for node
+            Transform handle = Instantiate<Transform>(handlePrefab, transform.position, transform.rotation);
+            // set handles position
+            handle.transform.position = transform.TransformPoint(entry.Key);
+            // add tag to the handle
+            handle.tag = "handle";
+            // add the handle as a child of the screenprefab
+            handle.transform.parent = screen;
+            // get the handle object
+            Handle handleObj = handle.GetComponent<Handle>();
+            // get vertex indices and add them to the handle
+            handleObj.AddIndices(entry.Value);
+        }
+    }
+
+    private void Triangulate()
+    {
 
 
+        // Testing coodinates
         List<Vector2> points = new List<Vector2>
         {
             new Vector2(0, 0),
@@ -38,9 +84,12 @@ public class Triangulator : MonoBehaviour {
             new Vector2(100, 100),
             new Vector2(100, 50),
             new Vector2(150, 50),
-            new Vector2(150, 0)
+            new Vector2(150, 0),
+            new Vector2(250, 0)
         };
-   
+
+        points = GetPoints();
+
 
         // Vertex is TriangleNet.Geometry.Vertex
         Polygon polygon = new Polygon();
@@ -53,165 +102,177 @@ public class Triangulator : MonoBehaviour {
 
         // ConformingDelaunay is false by default; this leads to ugly long polygons at the edges
         // because the algorithm will try to keep the mesh convex
-        TriangleNet.Meshing.ConstraintOptions options =
-            new TriangleNet.Meshing.ConstraintOptions() { ConformingDelaunay = true };
-        mesh = (TriangleNet.Mesh)polygon.Triangulate(options);
-
-
-
-
-        MakeMesh();
+     //   TriangleNet.Meshing.ConstraintOptions options =
+        //    new TriangleNet.Meshing.ConstraintOptions() { ConformingDelaunay = true };
+        triangulatorMesh = (TriangleNet.Mesh)polygon.Triangulate();
 
     }
 
-
-        void Update() {
-        //Mesh mesh = GetComponent<MeshFilter>().mesh;
-
-
-        Vector3[] vertices = screenMesh.vertices;
-        int i = 0;
-
-        Vector3 first = vertices[0];
-
-        while (i < vertices.Length) {
-            if (vertices[i] == first) 
-                vertices[i] += Vector3.left * Time.deltaTime;
-            i++;
-        }
-
-        screenMesh.vertices = vertices;
-        screenMesh.RecalculateBounds();
-    }
-
-    void Update2()
+    private void Update()
     {
-        IEnumerator<Vertex> vertexEnumerator = mesh.Vertices.GetEnumerator();
-        Vector3[] vertices = new Vector3[mesh.Vertices.Count];
+        if (screenMesh != null)
+        {
+            handles = GameObject.FindGameObjectsWithTag("handle");
+            for (int i = 0; i < handles.Length; i++)
+            {
+                List<int> indices = handles[i].GetComponent<Handle>().GetIndices();
+                foreach (int index in indices)
+                {
 
-        int arraycount = mesh.Vertices.Count;
-        for (int i = 0; i < mesh.Vertices.Count; i++)
+                    verts[index] = handles[i].transform.localPosition;
+                }
+            }
+            screenMesh.vertices = verts;
+            screenMesh.RecalculateBounds();
+            screenMesh.RecalculateNormals();
+        }
+    }
+
+
+
+    public void MakeMesh()
+    {
+
+        dictionary = new Dictionary<Vector3, List<int>>();
+
+        // Instantiate an enumerator to go over the Triangle.Net triangles - they don't
+        // provide any array-like interface for indexing
+
+        IEnumerator<Triangle> triangleEnumerator = triangulatorMesh.Triangles.GetEnumerator();
+
+
+        // Vertices in the unity mesh
+        List<Vector3> vertices = new List<Vector3>();
+
+        // Per-vertex normals
+        List<Vector3> normals = new List<Vector3>();
+
+        // Per-vertex UVs - unused here, but Unity still wants them
+        List<Vector2> uvs = new List<Vector2>();
+
+        // Triangles - each triangle is made of three indices in the vertices array
+        List<int> triangles = new List<int>();
+
+
+        for (int i = 0; i < triangulatorMesh.Triangles.Count; i++)
         {
 
-            if (!vertexEnumerator.MoveNext())
+            if (!triangleEnumerator.MoveNext())
             {
                 //  stop when last  
                 break;
             }
 
-            if (i == 0)
-            {
-                vertices[i]=(new Vector3(-100,-100, 0));
-            }
-            else
-            {
-                vertices[i] = (new Vector3((float)vertexEnumerator.Current.X, (float)vertexEnumerator.Current.Y, 0));
-            }
-            double currentx = vertexEnumerator.Current.X;
-            double currenty = vertexEnumerator.Current.Y;
+            // Get the current triangle
+            Triangle triangle = triangleEnumerator.Current;
 
-            int ole = 0;
-        }
+            // For the triangles to be right-side up, they need
+            // to be wound in the opposite direction
 
-
-
-
-    //    Mesh newMesh = new Mesh();
-       // newMesh.vertices = vertices;
-      //  newMesh.triangles = screenMesh.triangles;
-       // newMesh.normals = screenMesh.normals;
-       // newMesh.uv = screenMesh.uv;
-
-
-
-        
-        screenPrefab.GetComponent<MeshFilter>().mesh = screenMesh;
-    }
-
-
-    public void MakeMesh()
-    {
-        // Instantiate an enumerator to go over the Triangle.Net triangles - they don't
-        // provide any array-like interface for indexing
-
-        IEnumerator<Triangle> triangleEnumerator = mesh.Triangles.GetEnumerator();
-
-
-            // Vertices in the unity mesh
-            List<Vector3> vertices = new List<Vector3>();
-
-            // Per-vertex normals
-            List<Vector3> normals = new List<Vector3>();
-
-            // Per-vertex UVs - unused here, but Unity still wants them
-            List<Vector2> uvs = new List<Vector2>();
-
-            // Triangles - each triangle is made of three indices in the vertices array
-            List<int> triangles = new List<int>();
-
-  
-            for (int i = 0; i < mesh.Triangles.Count; i++)
-            {
-
-            if (!triangleEnumerator.MoveNext())
-                {
-                    //  stop when last  
-                    break;
-                }
-
-                // Get the current triangle
-                Triangle triangle = triangleEnumerator.Current;
-
-                // For the triangles to be right-side up, they need
-                // to be wound in the opposite direction
-                
-                Vector3 v0 = new Vector3((float)triangle.GetVertex(2).X, (float)triangle.GetVertex(2).Y, 0);
-                Vector3 v1 = new Vector3((float)triangle.GetVertex(1).X, (float)triangle.GetVertex(1).Y, 0);
-                Vector3 v2 = new Vector3((float)triangle.GetVertex(0).X, (float)triangle.GetVertex(0).Y, 0);
+            Vector3 v0 = new Vector3((float)triangle.GetVertex(2).X, (float)triangle.GetVertex(2).Y, 0);
+            Vector3 v1 = new Vector3((float)triangle.GetVertex(1).X, (float)triangle.GetVertex(1).Y, 0);
+            Vector3 v2 = new Vector3((float)triangle.GetVertex(0).X, (float)triangle.GetVertex(0).Y, 0);
 
             // This triangle is made of the next three vertices to be added
-                triangles.Add(vertices.Count);
-                triangles.Add(vertices.Count + 1);
-                triangles.Add(vertices.Count + 2);
+            triangles.Add(vertices.Count);
+            triangles.Add(vertices.Count + 1);
+            triangles.Add(vertices.Count + 2);
 
-                // Add the vertices
-                vertices.Add(v0);
-                vertices.Add(v1);
-                vertices.Add(v2);
+            // Add the vertices
+            AppendInDict(v0, vertices.Count);
+            vertices.Add(v0);
+            AppendInDict(v1, vertices.Count);
+            vertices.Add(v1);
+            AppendInDict(v2, vertices.Count);
+            vertices.Add(v2);
 
-                // Compute the normal - flat shaded, so the vertices all have the same normal
-                Vector3 normal = Vector3.Cross(v1 - v0, v2 - v0);
-                normals.Add(normal);
-                normals.Add(normal);
-                normals.Add(normal);
+            // Compute the normal - flat shaded, so the vertices all have the same normal
+            Vector3 normal = Vector3.Cross(v1 - v0, v2 - v0);
+            normals.Add(normal);
+            normals.Add(normal);
+            normals.Add(normal);
 
-                // If you want to texture your terrain, UVs are important,
-                // but I just use a flat color so put in dummy coords
-                uvs.Add(new Vector2((float)triangle.GetVertex(2).X, (float)triangle.GetVertex(2).Y));
-                uvs.Add(new Vector2((float)triangle.GetVertex(1).X, (float)triangle.GetVertex(1).Y));
-                uvs.Add(new Vector2((float)triangle.GetVertex(0).X, (float)triangle.GetVertex(0).Y));
-            }
+            // If you want to texture your terrain, UVs are important,
+            // but I just use a flat color so put in dummy coords
+            uvs.Add(new Vector2((float)triangle.GetVertex(2).X, (float)triangle.GetVertex(2).Y));
+            uvs.Add(new Vector2((float)triangle.GetVertex(1).X, (float)triangle.GetVertex(1).Y));
+            uvs.Add(new Vector2((float)triangle.GetVertex(0).X, (float)triangle.GetVertex(0).Y));
+        }
 
-            // Create the actual Unity mesh object
-            screenMesh = new Mesh();
-            screenMesh.vertices = vertices.ToArray();
-            screenMesh.uv = uvs.ToArray();
-            screenMesh.triangles = triangles.ToArray();
-            screenMesh.normals = normals.ToArray();
+        // Create the actual Unity mesh object
+        screenMesh = new Mesh();
+        screenMesh.vertices = vertices.ToArray();
+        screenMesh.uv = uvs.ToArray();
+        screenMesh.triangles = triangles.ToArray();
+        screenMesh.normals = normals.ToArray();
+        screenMesh.MarkDynamic();
 
-
-            // Instantiate the GameObject which will display this chunk
-            Transform screen = Instantiate<Transform>(screenPrefab, transform.position, transform.rotation);
-            screen.GetComponent<MeshFilter>().mesh = screenMesh;
-            screen.GetComponent<MeshCollider>().sharedMesh = screenMesh;
-            screen.transform.parent = transform;
+        // Instantiate the GameObject which will display this chunk
+        screen = Instantiate<Transform>(screenPrefab, transform.position, transform.rotation);
+        screen.GetComponent<MeshFilter>().mesh = screenMesh;
+        screen.GetComponent<MeshCollider>().sharedMesh = screenMesh;
+        screen.transform.parent = transform;
 
     }
 
 
+    private void AppendInDict(Vector3 key, int value)
+    {
+        if (dictionary.ContainsKey(key))
+        {
+            dictionary[key].Add(value);
+        }
+        else
+        {
+            dictionary[key] = new List<int> { value };
+        }
+    }
 
 
+    public void TaskOnClick()
+    {
 
+        if (handles != null) { 
+        foreach (GameObject handle in handles)
+        {
+            DestroyImmediate(handle);
+        }
+        }
+        if (screen != null)
+        {
+            DestroyImmediate(screen.gameObject);
+            screen = null;
+        }
+        if (screenMesh != null)
+        {
+            DestroyImmediate(screenMesh);
+            screenMesh = null;
+        }
+        
+
+
+        Triangulate();
+        // create mesh from the triangulation
+        MakeMesh();
+        // add handles to the mesh
+        AddHandles();
+        Debug.Log("You have clicked the button!");
+        Debug.Log(" " + udpScript.GetIRs()[0].x);
+    }
+
+    private List<Vector2> GetPoints()
+    {
+        List<Vector2> points = new List<Vector2>();
+
+        IRPoint[] irPoints = udpScript.GetIRs();
+
+        foreach(IRPoint irPoint in irPoints)
+        {
+            points.Add(new Vector2(irPoint.x, irPoint.y));
+        }
+
+        return points;
+    }
 
 
 }
