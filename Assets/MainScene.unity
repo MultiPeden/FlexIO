@@ -137,7 +137,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 376856427}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 398.5, y: -163.5, z: 0}
+  m_LocalPosition: {x: 397, y: -163.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 486640886}
@@ -433,7 +433,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 545059252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -346.5, y: 161.5, z: 0}
+  m_LocalPosition: {x: -345, y: 161.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 733712256}
@@ -577,7 +577,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 733712252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 446.5, y: 211.5, z: 0}
+  m_LocalPosition: {x: 445, y: 211.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 545059253}
@@ -815,7 +815,7 @@ GameObject:
   - component: {fileID: 2002779680}
   - component: {fileID: 2002779679}
   m_Layer: 0
-  m_Name: Screeen
+  m_Name: Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -832,6 +832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2668a03281b7ce45a6b3b384b4c40a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   screenPrefab: {fileID: 4760822391077712, guid: 595d41c5a0936e34ebad74588168c2ad,
     type: 2}
   handlePrefab: {fileID: 4272182401360304, guid: 8194a980dcf31a646b2d3c82c39cf864,

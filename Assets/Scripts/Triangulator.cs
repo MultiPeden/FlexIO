@@ -2,11 +2,12 @@
 using UnityEngine;
 using TriangleNet.Geometry;
 using TriangleNet.Topology;
+using System;
 
 public class Triangulator : MonoBehaviour
 {
 
-
+    public bool debug;
 
     // The delaunay mesh
     private TriangleNet.Mesh triangulatorMesh = null;
@@ -24,6 +25,8 @@ public class Triangulator : MonoBehaviour
 
     Dictionary<Vector3, List<int>> dictionary;
 
+    Dictionary<int, Vector3> IDtoVectorDict;
+
 
     /// <summary>
     /// ///
@@ -40,12 +43,12 @@ public class Triangulator : MonoBehaviour
     {
         GameObject go = GameObject.Find("UDPScript");
         udpScript = (UDPScript)go.GetComponent(typeof(UDPScript));
-   
+        debug = false;
 
     }
         
 
-        private void AddHandles()
+        private void AddHandles(List<Vector2> points)
     {
         // add handles to the mesh
         verts = screenMesh.vertices;
@@ -62,34 +65,17 @@ public class Triangulator : MonoBehaviour
             // get the handle object
             Handle handleObj = handle.GetComponent<Handle>();
             // get vertex indices and add them to the handle
-            handleObj.AddIndices(entry.Value);
+
+
+            handleObj.InitHandle(entry.Value, points.IndexOf(new  Vector2(entry.Key.x, entry.Key.y) ));
         }
     }
 
-    private void Triangulate()
+
+
+
+    private void Triangulate(List<Vector2> points)
     {
-
-
-        // Testing coodinates
-        List<Vector2> points = new List<Vector2>
-        {
-            new Vector2(0, 0),
-            new Vector2(0, 50),
-            new Vector2(50, 50),
-            new Vector2(50, 100),
-            new Vector2(0, 100),
-            new Vector2(0, 150),
-            new Vector2(150, 150),
-            new Vector2(150, 100),
-            new Vector2(100, 100),
-            new Vector2(100, 50),
-            new Vector2(150, 50),
-            new Vector2(150, 0),
-            new Vector2(250, 0)
-        };
-
-        points = GetPoints();
-
 
         // Vertex is TriangleNet.Geometry.Vertex
         Polygon polygon = new Polygon();
@@ -98,17 +84,79 @@ public class Triangulator : MonoBehaviour
             polygon.Add(new Vertex(point.x, point.y));
         }
 
+        if (polygon.Count > 2)
+        {
+
+            // ConformingDelaunay is false by default; this leads to ugly long polygons at the edges
+            // because the algorithm will try to keep the mesh convex
+            //   TriangleNet.Meshing.ConstraintOptions options =
+            //    new TriangleNet.Meshing.ConstraintOptions() { ConformingDelaunay = true };
+            triangulatorMesh = (TriangleNet.Mesh)polygon.Triangulate();
+        }
+        else
+        {
+
+            Debug.Log(string.Format("Mesh needs minimum 3 points but did only receive: {0} point(s)", polygon.Count));
+        }
 
 
-        // ConformingDelaunay is false by default; this leads to ugly long polygons at the edges
-        // because the algorithm will try to keep the mesh convex
-     //   TriangleNet.Meshing.ConstraintOptions options =
-        //    new TriangleNet.Meshing.ConstraintOptions() { ConformingDelaunay = true };
-        triangulatorMesh = (TriangleNet.Mesh)polygon.Triangulate();
 
     }
 
+
     private void Update()
+    {
+        if (debug) {
+            DebugUpdate();
+        }
+        else
+        {
+            DefaultUpdate();
+        }
+
+
+    }
+
+    private void DefaultUpdate()
+    {
+
+        if (screenMesh != null)
+        {
+            IRPoint[] irs = GetIrs();
+            handles = GameObject.FindGameObjectsWithTag("handle");
+
+            if (handles.Length == irs.Length)
+            {
+
+                for (int i = 0; i < handles.Length; i++)
+                {
+
+                    Handle handle = handles[i].GetComponent<Handle>();
+
+                    IRPoint iRPoint = Array.Find(irs, element => element.id == handle.id);                    
+                    List<int> indices = handle.GetIndices();
+                    
+
+                    foreach (int index in indices)
+                    {
+
+                        verts[index] = new Vector3(iRPoint.x, iRPoint.y, 0);
+                    }
+                }
+
+                screenMesh.vertices = verts;
+                screenMesh.RecalculateBounds();
+                screenMesh.RecalculateNormals();
+            }
+            else
+            {
+                Debug.Log(string.Format("Lost points, had {0} points, now have {1}", handles.Length, irs.Length));
+            }
+        }
+
+    }
+
+        private void DebugUpdate()
     {
         if (screenMesh != null)
         {
@@ -248,16 +296,21 @@ public class Triangulator : MonoBehaviour
             DestroyImmediate(screenMesh);
             screenMesh = null;
         }
-        
 
 
-        Triangulate();
+
+
+        List<Vector2> points = GetPoints();
+
+
+
+        Triangulate(points);
         // create mesh from the triangulation
         MakeMesh();
         // add handles to the mesh
-        AddHandles();
-        Debug.Log("You have clicked the button!");
-        Debug.Log(" " + udpScript.GetIRs()[0].x);
+        AddHandles(points);
+       // Debug.Log("You have clicked the button!");
+      
     }
 
     private List<Vector2> GetPoints()
@@ -272,6 +325,12 @@ public class Triangulator : MonoBehaviour
         }
 
         return points;
+    }
+
+
+    private IRPoint[] GetIrs()
+    {
+        return udpScript.GetIRs();
     }
 
 
