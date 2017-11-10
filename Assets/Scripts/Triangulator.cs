@@ -302,15 +302,20 @@ public class Triangulator : MonoBehaviour
 
         List<Vector2> points = GetPoints();
 
+        if (points != null)
+        {
+            Triangulate(points);
+            // create mesh from the triangulation
+            MakeMesh();
+            // add handles to the mesh
+            AddHandles(points);
+            // Debug.Log("You have clicked the button!");
+        }
+        else
+        {
+            Debug.Log("No points detected");
+        }
 
-
-        Triangulate(points);
-        // create mesh from the triangulation
-        MakeMesh();
-        // add handles to the mesh
-        AddHandles(points);
-       // Debug.Log("You have clicked the button!");
-      
     }
 
     private List<Vector2> GetPoints()
@@ -318,13 +323,21 @@ public class Triangulator : MonoBehaviour
         List<Vector2> points = new List<Vector2>();
 
         IRPoint[] irPoints = udpScript.GetIRs();
-
-        foreach(IRPoint irPoint in irPoints)
+        if (irPoints.Length > 0)
         {
-            points.Add(new Vector2(irPoint.x, irPoint.y));
+
+            foreach (IRPoint irPoint in irPoints)
+            {
+                points.Add(new Vector2(irPoint.x, irPoint.y));
+            }
+
+            return points;
+        }
+        else
+        {
+            return null;
         }
 
-        return points;
     }
 
 

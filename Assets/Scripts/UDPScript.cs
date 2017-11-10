@@ -22,6 +22,8 @@ public class UDPScript : MonoBehaviour
     Thread receiveThread;
     UdpClient client;
     private IRPoint[] irs;
+    int portNumber = 11000;
+
 
     // -------------------------------------------------------------------------
     public void Start()
@@ -37,10 +39,10 @@ public class UDPScript : MonoBehaviour
     // -------------------------------------------------------------------------
     private void ReceiveData()
     {
-        int somePort = 11000;
+       
 
 
-        client = new UdpClient(somePort);
+        client = new UdpClient(portNumber);
         try
         {
             client.BeginReceive(new AsyncCallback(Recv), null);
@@ -58,7 +60,7 @@ public class UDPScript : MonoBehaviour
     //CallBack
     private void Recv(IAsyncResult res)
     {
-        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 8000);
+        IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
         byte[] received = client.EndReceive(res, ref RemoteIpEndPoint);
 
         //Process codes

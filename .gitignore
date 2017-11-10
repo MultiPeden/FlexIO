@@ -49,3 +49,4 @@ ProjectSettings/ProjectVersion.txt
 # peter
 
 /Assets/*.meta
+/Assets/Scripts/*.meta
