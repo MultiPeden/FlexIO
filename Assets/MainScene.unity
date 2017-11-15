@@ -495,6 +495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   message: 
+  autoStartKinect: 0
 --- !u!1 &733712252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,6 +1121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   message: 
+  autoStartKinect: 1
 --- !u!224 &2053454172
 RectTransform:
   m_ObjectHideFlags: 0

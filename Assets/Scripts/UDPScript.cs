@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Text;
 using System;
 using System.Threading;
-
+using System.Diagnostics;
 
 public class UDPScript : MonoBehaviour
 {
@@ -24,10 +24,24 @@ public class UDPScript : MonoBehaviour
     private IRPoint[] irs;
     int portNumber = 11000;
 
+    public bool autoStartKinect;
+    Process kinectProcess;
 
     // -------------------------------------------------------------------------
     public void Start()
     {
+        if (autoStartKinect)
+        {
+            kinectProcess = new Process();
+            kinectProcess.StartInfo.FileName = "C:/Users/MultiPeden/Documents/GitHub/infraredKinectData/bin/AnyCPU/Debug/InfraredKinectData-WPF.exe";
+          //  kinectProcess.StartInfo.Arguments = "-s";
+            kinectProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            kinectProcess.Start();
+        }
+
+
+
+
         message = "";
   //      instruction = GetComponent<Text>();
 //        instruction.text = "started";
@@ -103,6 +117,8 @@ public class UDPScript : MonoBehaviour
     {
         if (client != null)
             client.Close();
+        if (kinectProcess != null)
+            kinectProcess.Kill();
     }
 
 
