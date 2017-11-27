@@ -6,6 +6,34 @@ public class Handle : MonoBehaviour {
 
     public List<int> indices;
     public int id;
+    private int x;
+    private int y;
+
+    public int X
+    {
+        get
+        {
+            return x;
+        }
+
+        set
+        {
+            x = value;
+        }
+    }
+
+    public int Y
+    {
+        get
+        {
+            return y;
+        }
+
+        set
+        {
+            y = value;
+        }
+    }
 
 
     /*
@@ -20,6 +48,8 @@ public class Handle : MonoBehaviour {
     {
         this.indices = indices;
         this.id = id;
+        this.x = 0;
+        this.y = 0;
     }
 
 	
@@ -35,6 +65,7 @@ public class Handle : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+        transform.position = new Vector3(x, y, 0);
+    }
 }

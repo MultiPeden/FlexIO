@@ -137,7 +137,12 @@ public class Triangulator : MonoBehaviour
 
                     Handle handle = handles[i].GetComponent<Handle>();
 
-                    IRPoint iRPoint = Array.Find(irs, element => element.id == handle.id);                    
+                    IRPoint iRPoint = Array.Find(irs, element => element.id == handle.id);
+
+                    handle.X = iRPoint.x;
+                    handle.Y = iRPoint.y;
+
+
                     List<int> indices = handle.GetIndices();
                     
 
