@@ -83,6 +83,7 @@ public class UDPScript : MonoBehaviour
         client.BeginReceive(new AsyncCallback(Recv), null);
 
         this.irs = JsonHelper.FromJson<IRPoint>(message);
+     //   UnityEngine.Debug.Log(this.irs.Length);
         msgUpdated = true;
 
     }

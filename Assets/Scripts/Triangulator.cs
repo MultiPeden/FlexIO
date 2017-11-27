@@ -52,6 +52,7 @@ public class Triangulator : MonoBehaviour
     {
         // add handles to the mesh
         verts = screenMesh.vertices;
+        int i = 0;
         foreach (KeyValuePair<Vector3, List<int>> entry in dictionary)
         {
             // create handle for node
@@ -68,7 +69,10 @@ public class Triangulator : MonoBehaviour
 
 
             handleObj.InitHandle(entry.Value, points.IndexOf(new  Vector2(entry.Key.x, entry.Key.y) ));
+            i++;
         }
+
+        Debug.Log(i);
     }
 
 
@@ -86,7 +90,7 @@ public class Triangulator : MonoBehaviour
 
         if (polygon.Count > 2)
         {
-
+            
             // ConformingDelaunay is false by default; this leads to ugly long polygons at the edges
             // because the algorithm will try to keep the mesh convex
             //   TriangleNet.Meshing.ConstraintOptions options =
@@ -99,7 +103,7 @@ public class Triangulator : MonoBehaviour
             Debug.Log(string.Format("Mesh needs minimum 3 points but did only receive: {0} point(s)", polygon.Count));
         }
 
-
+        Debug.Log(points.Count);
 
     }
 
@@ -201,8 +205,8 @@ public class Triangulator : MonoBehaviour
         // Triangles - each triangle is made of three indices in the vertices array
         List<int> triangles = new List<int>();
 
-
-        for (int i = 0; i < triangulatorMesh.Triangles.Count; i++)
+        Debug.Log("triangles " + triangulatorMesh.Triangles.Count);
+        for (int i = 0; i <= triangulatorMesh.Triangles.Count; i++)
         {
 
             if (!triangleEnumerator.MoveNext())
