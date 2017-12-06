@@ -8,6 +8,7 @@ public class Handle : MonoBehaviour {
     public int id;
     private int x;
     private int y;
+    private int z;
 
     public int X
     {
@@ -35,6 +36,19 @@ public class Handle : MonoBehaviour {
         }
     }
 
+    public int Z
+    {
+        get
+        {
+            return z;
+        }
+
+        set
+        {
+            z = value;
+        }
+    }
+
 
     /*
 	// Use this for initialization
@@ -50,6 +64,7 @@ public class Handle : MonoBehaviour {
         this.id = id;
         this.x = 0;
         this.y = 0;
+        this.z = 0;
     }
 
 	
@@ -66,6 +81,6 @@ public class Handle : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        transform.position = new Vector3(x, y, 0);
+        transform.position = new Vector3(x, y, z);
     }
 }

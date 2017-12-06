@@ -21,7 +21,7 @@ public class UDPScript : MonoBehaviour
 
     Thread receiveThread;
     UdpClient client;
-    private IRPoint[] irs;
+    private IRPoint3D[] irs;
     int portNumber = 11000;
 
     public bool autoStartKinect;
@@ -82,7 +82,7 @@ public class UDPScript : MonoBehaviour
         this.message = Encoding.UTF8.GetString(received);
         client.BeginReceive(new AsyncCallback(Recv), null);
 
-        this.irs = JsonHelper.FromJson<IRPoint>(message);
+        this.irs = JsonHelper.FromJson<IRPoint3D>(message);
      //   UnityEngine.Debug.Log(this.irs.Length);
         msgUpdated = true;
 
@@ -99,7 +99,7 @@ public class UDPScript : MonoBehaviour
 
 
 
-          //  IRPoint[] irs = JsonHelper.FromJson<IRPoint>(message);
+          //  IRPoint3D[] irs = JsonHelper.FromJson<IRPoint3D>(message);
 
 
 
@@ -128,7 +128,7 @@ public class UDPScript : MonoBehaviour
         return this.message;
     }
 
-    public IRPoint[] GetIRs()
+    public IRPoint3D[] GetIRs()
     {
 
 

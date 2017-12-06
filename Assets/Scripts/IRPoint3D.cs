@@ -4,12 +4,8 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class IRPoint 
+public class IRPoint3D : IRPoint
 {
-
-
-    public int id;
-    public int x;
-    public int y;
+    public int z;
 
 }
