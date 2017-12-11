@@ -6,11 +6,11 @@ public class Handle : MonoBehaviour {
 
     public List<int> indices;
     public int id;
-    private int x;
-    private int y;
-    private int z;
+    private float x;
+    private float y;
+    private float z;
 
-    public int X
+    public float X
     {
         get
         {
@@ -23,7 +23,7 @@ public class Handle : MonoBehaviour {
         }
     }
 
-    public int Y
+    public float Y
     {
         get
         {
@@ -36,7 +36,7 @@ public class Handle : MonoBehaviour {
         }
     }
 
-    public int Z
+    public float Z
     {
         get
         {

@@ -139,9 +139,9 @@ public class Triangulator : MonoBehaviour
 
                     IRPoint3D iRPoint = Array.Find(irs, element => element.id == handle.id);
 
-                    handle.X = iRPoint.x;
-                    handle.Y = iRPoint.y;
-                    handle.Z = iRPoint.z;
+                    handle.X = (float) (iRPoint.x * 0.001f );
+                    handle.Y = (float) (iRPoint.y * 0.001f);
+                    handle.Z = (float) iRPoint.z * 0.001f;
 
 
                     List<int> indices = handle.GetIndices();
@@ -150,7 +150,7 @@ public class Triangulator : MonoBehaviour
                     foreach (int index in indices)
                     {
 
-                        verts[index] = new Vector3(iRPoint.x, iRPoint.y, 0);
+                        verts[index] = new Vector3(iRPoint.x , iRPoint.y, iRPoint.z );
                     }
                 }
 
