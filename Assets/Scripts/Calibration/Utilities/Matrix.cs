@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace FlexIO
 {
-    [DataContract]
+    [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/RoomAliveToolkit")]
     public class Matrix
 	{
 		protected int m, n, mn;

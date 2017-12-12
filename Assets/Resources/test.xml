@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ProjectorCameraEnsemble xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/FlexIO">
+<ProjectorCameraEnsemble xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/RoomAliveToolkit">
   <cameras>
     <ProjectorCameraEnsemble.Camera>
       <calibration>
@@ -124,18 +124,18 @@
       <cameraMatrix>
         <ValuesByColumn xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
           <d5p1:ArrayOfdouble>
-            <d5p1:double>2777.6265301669473</d5p1:double>
+            <d5p1:double>2726.8173980260972</d5p1:double>
             <d5p1:double>0</d5p1:double>
             <d5p1:double>0</d5p1:double>
           </d5p1:ArrayOfdouble>
           <d5p1:ArrayOfdouble>
             <d5p1:double>0</d5p1:double>
-            <d5p1:double>2777.6265301669473</d5p1:double>
+            <d5p1:double>2726.8173980260972</d5p1:double>
             <d5p1:double>0</d5p1:double>
           </d5p1:ArrayOfdouble>
           <d5p1:ArrayOfdouble>
-            <d5p1:double>1038.3416382734606</d5p1:double>
-            <d5p1:double>48.147865197660508</d5p1:double>
+            <d5p1:double>1025.3909192995748</d5p1:double>
+            <d5p1:double>-5.63927676976534</d5p1:double>
             <d5p1:double>1</d5p1:double>
           </d5p1:ArrayOfdouble>
         </ValuesByColumn>
@@ -156,27 +156,27 @@
       <pose>
         <ValuesByColumn xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
           <d5p1:ArrayOfdouble>
-            <d5p1:double>0.99933093786239624</d5p1:double>
-            <d5p1:double>-0.001800465164706111</d5p1:double>
-            <d5p1:double>-0.036530133336782455</d5p1:double>
+            <d5p1:double>0.999836266040802</d5p1:double>
+            <d5p1:double>-0.0084194261580705643</d5p1:double>
+            <d5p1:double>0.016018861904740334</d5p1:double>
             <d5p1:double>0</d5p1:double>
           </d5p1:ArrayOfdouble>
           <d5p1:ArrayOfdouble>
-            <d5p1:double>-0.00045008707093074918</d5p1:double>
-            <d5p1:double>0.99810659885406494</d5p1:double>
-            <d5p1:double>-0.061505954712629318</d5p1:double>
+            <d5p1:double>0.0072476286441087723</d5p1:double>
+            <d5p1:double>0.99738895893096924</d5p1:double>
+            <d5p1:double>0.071851819753646851</d5p1:double>
             <d5p1:double>0</d5p1:double>
           </d5p1:ArrayOfdouble>
           <d5p1:ArrayOfdouble>
-            <d5p1:double>0.03657170757651329</d5p1:double>
-            <d5p1:double>0.061481241136789322</d5p1:double>
-            <d5p1:double>0.99743801355361938</d5p1:double>
+            <d5p1:double>-0.01658199168741703</d5p1:double>
+            <d5p1:double>-0.071723952889442444</d5p1:double>
+            <d5p1:double>0.99728661775588989</d5p1:double>
             <d5p1:double>0</d5p1:double>
           </d5p1:ArrayOfdouble>
           <d5p1:ArrayOfdouble>
-            <d5p1:double>0.14991500152391105</d5p1:double>
-            <d5p1:double>-0.10373104505435432</d5p1:double>
-            <d5p1:double>0.0412316625268999</d5p1:double>
+            <d5p1:double>0.1516678327313658</d5p1:double>
+            <d5p1:double>-0.10459249348299755</d5p1:double>
+            <d5p1:double>0.058369050129746962</d5p1:double>
             <d5p1:double>1</d5p1:double>
           </d5p1:ArrayOfdouble>
         </ValuesByColumn>

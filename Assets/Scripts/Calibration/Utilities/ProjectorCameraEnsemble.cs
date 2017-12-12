@@ -6,9 +6,22 @@ using System.Runtime.Serialization;
 using System.IO;
 using UnityEngine;
 
+//[assembly: ContractNamespaceAttribute("http://schemas.datacontract.org/2004/07/RoomAliveToolkit",
+//    ClrNamespace = "FlexIO")]
+
+//[assembly: ContractNamespace("RoomAliveToolkit",
+//   ClrNamespace = "FlexIO")]
+
+[assembly: ContractNamespaceAttribute("http://schemas.datacontract.org/2004/07/RoomAliveToolkit",
+    ClrNamespace = "FlexIO")]
+
 namespace FlexIO
-{ 
-    [DataContract]
+{
+
+
+       [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/RoomAliveToolkit")]
+
+//    [DataContract]
     public class ProjectorCameraEnsemble
     {
         [DataMember]
@@ -18,7 +31,7 @@ namespace FlexIO
         [DataMember]
         public List<Projector> projectors;
 
-        [DataContract]
+        [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/RoomAliveToolkit")]
         public class Projector
         {
             public Projector()
@@ -50,7 +63,7 @@ namespace FlexIO
             public bool lockIntrinsics;
         }
 
-        [DataContract]
+        [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/RoomAliveToolkit")]
         public class Camera
         {
             public Camera()
@@ -69,7 +82,7 @@ namespace FlexIO
             [DataMember]
             public Kinect2Calibration calibration;
 
-            [DataContract]
+            [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/RoomAliveToolkit")]
             public class Kinect2Calibration
             {
                 public Kinect2Calibration()
