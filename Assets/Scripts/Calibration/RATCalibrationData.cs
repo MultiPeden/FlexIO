@@ -31,7 +31,6 @@ namespace FlexIO
             if(calibration!=null)
                 ensemble = ProjectorCameraEnsemble.ReadCalibration(calibration.text);
             loaded = true;
-            test = ensemble.name;
         }
 
         void Start()
@@ -60,9 +59,9 @@ namespace FlexIO
         {
             if(IsValid())
             {
-                RATKinectClient[] cameras = GetComponentsInChildren<RATKinectClient>();
+          //      RATKinectClient[] cameras = GetComponentsInChildren<RATKinectClient>();
                 RATProjector[] projectors = GetComponentsInChildren<RATProjector>();
-
+                /*
                 foreach(RATKinectClient camera in cameras) 
                 {
                     if (camera.calibrationData == null)
@@ -72,6 +71,7 @@ namespace FlexIO
                         camera.LoadCalibrationData();
                     }
                 }
+                */
                 foreach (RATProjector projector in projectors)
                 {
                     if (projector.calibrationData == null)

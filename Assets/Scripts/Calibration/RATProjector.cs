@@ -27,7 +27,7 @@ namespace FlexIO
         /// <summary>
         /// A link to the RATProjectionManager
         /// </summary>
-        public RATProjectionManager projectionManager;
+     //   public RATProjectionManager projectionManager;
 
         public Vector4 lensDist;
         public int imageWidth = 1280;
@@ -42,42 +42,12 @@ namespace FlexIO
         public int displayIndex = -1;
 
 
-        /* //EDIT
-        public int userCount
-        {
-            get
-            {
-                return projectionManager.userCount;
-            }
-        }
-        */
-
-        public bool hasManager
-        {
-            get
-            {
-                return projectionManager != null && projectionManager.isActiveAndEnabled;
-            }
-        }
-
         public void Awake()
         {
-            cam = this.GetComponent<Camera>();
-            LoadCalibrationData();
-            if (projectionManager == null)
-            {
-                projectionManager = GetComponent<RATProjectionManager>();
-                if (projectionManager == null)
-                    projectionManager = GetComponentInParent<RATProjectionManager>();
-                if (projectionManager == null)
-                    projectionManager = GameObject.FindObjectOfType<RATProjectionManager>();
-            }
-            if (projectionManager != null)
-                projectionManager.RegisterProjector(this);
+          //  cam = this.GetComponent<Camera>();
+          //  LoadCalibrationData();
 
-            cam.enabled = true;
-
-            //EDIT dynamicMask = GetComponent<RATDynamicMask>();
+          //  cam.enabled = true;
 
             initialized = true;
         }
@@ -180,68 +150,8 @@ namespace FlexIO
             return projMat;
         }
 
-        public void Update()
-        {
 
-        }
 
-        /*
-        public void Render()
-        {
-            if (!hasManager)
-                return;
-
-            int prevCulling = cam.cullingMask;
-
-            bool maskWasEnabled = false;
-            if (dynamicMask != null)
-            {
-                maskWasEnabled = dynamicMask.enabled;
-                dynamicMask.enabled = false;
-            }
-
-            cam.depth = 1;
-            cam.backgroundColor = projectionManager.backgroundColor;
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.cullingMask = projectionManager.textureLayers;
-            cam.Render();
-
-            cam.clearFlags = CameraClearFlags.Nothing;
-            for (int i = 0; i < userCount; i++)
-            {
-                RATUserViewCamera userView = projectionManager.userViewCameras[i];
-                if (!userView.isActiveAndEnabled)
-                    continue;
-                userView.RenderProjection(cam);
-            }
-
-            if (dynamicMask != null && maskWasEnabled)
-            {
-                dynamicMask.enabled = maskWasEnabled;
-                cam.clearFlags = CameraClearFlags.Nothing;
-                cam.cullingMask = 0;
-                cam.Render();
-            }
-            
-
-            //Reset
-            cam.cullingMask = prevCulling;
-            cam.clearFlags = CameraClearFlags.SolidColor;
-        }
-
-        public void RenderTexturesOnly()
-        {
-            if (!hasManager)
-                return;
-            cam.backgroundColor = projectionManager.backgroundColor;
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.cullingMask = projectionManager.textureLayers;
-            if (dynamicMask != null)
-                dynamicMask.enabled = true;
-            //cam.enabled = true;
-            cam.Render();
-        }
-        */
 
     }
 }
