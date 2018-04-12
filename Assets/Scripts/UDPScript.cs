@@ -1,15 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-
-
+﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System;
 using System.Threading;
-using System.Diagnostics;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UDPScript : MonoBehaviour
 {
@@ -24,8 +19,10 @@ public class UDPScript : MonoBehaviour
     private IRPoint3D[] irs;
     int portNumber = 11000;
 
+
     public bool autoStartKinect;
     Process kinectProcess;
+    float[] floatArray;
 
     // -------------------------------------------------------------------------
     public void Start()
@@ -34,17 +31,16 @@ public class UDPScript : MonoBehaviour
         {
             kinectProcess = new Process();
             kinectProcess.StartInfo.FileName = "C:/Users/MultiPeden/Documents/GitHub/infraredKinectData/bin/AnyCPU/Debug/InfraredKinectData-WPF.exe";
-          //  kinectProcess.StartInfo.Arguments = "-s";
+            //  kinectProcess.StartInfo.Arguments = "-s";
             kinectProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             kinectProcess.Start();
         }
 
 
 
-
         message = "";
-  //      instruction = GetComponent<Text>();
-//        instruction.text = "started";
+        //      instruction = GetComponent<Text>();
+        //        instruction.text = "started";
         ReceiveData();
         msgUpdated = false;
 
@@ -53,7 +49,7 @@ public class UDPScript : MonoBehaviour
     // -------------------------------------------------------------------------
     private void ReceiveData()
     {
-       
+
 
 
         client = new UdpClient(portNumber);
@@ -65,7 +61,7 @@ public class UDPScript : MonoBehaviour
         catch (Exception e)
         {
 
-            this.message = "Error: " + e.ToString();
+            //  this.message = "Error: " + e.ToString();
         }
     }
 
@@ -77,16 +73,61 @@ public class UDPScript : MonoBehaviour
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, portNumber);
         byte[] received = client.EndReceive(res, ref RemoteIpEndPoint);
 
-        //Process codes
-        
-        this.message = Encoding.UTF8.GetString(received);
+
+
+        // create a second float array and copy the bytes into it...
+        int len = (int)(received.Length * .25);
+        if (floatArray == null || len != floatArray.Length)
+        {
+            floatArray = new float[received.Length / 4];
+        }
+
+
+        Buffer.BlockCopy(received, 0, floatArray, 0, received.Length);
+
+        SetIrs(floatArray);
+        msgUpdated = true;
         client.BeginReceive(new AsyncCallback(Recv), null);
 
-        this.irs = JsonHelper.FromJson<IRPoint3D>(message);
-     //   UnityEngine.Debug.Log(this.irs.Length);
-        msgUpdated = true;
+        //Process codes
 
+        //this.message = Encoding.ASCII.GetString(received)
+        // this.irs = JsonHelper.FromJson<IRPoint3D>(message);
+        //   UnityEngine.Debug.Log(this.irs.Length);
     }
+
+
+    private void SetIrs(float[] floatArray)
+    {
+
+
+
+        int len = floatArray.Length / 3;
+
+        message = "hej " + len + " " + (floatArray.Length);
+        IRPoint3D[] irs2 = new IRPoint3D[len];
+        IRPoint3D ir;
+        int id = 0;
+
+        int i = 0;
+        for (int j = 0; j < len; j++)
+        {
+            ir = new IRPoint3D
+            {
+                id = j,
+                x = floatArray[i],
+                y = floatArray[i + 1],
+                z = floatArray[i + 2]
+            };
+            i += 3;
+
+            irs2[j] = ir;
+
+        }
+
+        this.irs = irs2;
+    }
+
 
     // Update is called once per frame
     void Update1()
@@ -95,11 +136,11 @@ public class UDPScript : MonoBehaviour
         if (msgUpdated)
         {
             msgUpdated = false;
-          //  Debug.Log(message);
+            //  Debug.Log(message);
 
 
 
-          //  IRPoint3D[] irs = JsonHelper.FromJson<IRPoint3D>(message);
+            //  IRPoint3D[] irs = JsonHelper.FromJson<IRPoint3D>(message);
 
 
 
@@ -136,6 +177,6 @@ public class UDPScript : MonoBehaviour
     }
 
 
-  
+
 
 }

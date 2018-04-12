@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 using TriangleNet.Geometry;
 using TriangleNet.Topology;
-using System;
+using UnityEngine;
 
 public class Triangulator : MonoBehaviour
 {
@@ -46,9 +46,9 @@ public class Triangulator : MonoBehaviour
         debug = false;
 
     }
-        
 
-        private void AddHandles(List<Vector2> points)
+
+    private void AddHandles(List<Vector2> points)
     {
         // add handles to the mesh
         verts = screenMesh.vertices;
@@ -68,7 +68,7 @@ public class Triangulator : MonoBehaviour
             // get vertex indices and add them to the handle
 
 
-            handleObj.InitHandle(entry.Value, points.IndexOf(new  Vector2(entry.Key.x, entry.Key.y) ));
+            handleObj.InitHandle(entry.Value, points.IndexOf(new Vector2(entry.Key.x, entry.Key.y)));
             i++;
         }
 
@@ -90,7 +90,7 @@ public class Triangulator : MonoBehaviour
 
         if (polygon.Count > 2)
         {
-            
+
             // ConformingDelaunay is false by default; this leads to ugly long polygons at the edges
             // because the algorithm will try to keep the mesh convex
             //   TriangleNet.Meshing.ConstraintOptions options =
@@ -110,7 +110,8 @@ public class Triangulator : MonoBehaviour
 
     private void Update()
     {
-        if (debug) {
+        if (debug)
+        {
             DebugUpdate();
         }
         else
@@ -139,18 +140,18 @@ public class Triangulator : MonoBehaviour
 
                     IRPoint3D iRPoint = Array.Find(irs, element => element.id == handle.id);
 
-                    handle.X = (float) (iRPoint.x * 0.001f );
-                    handle.Y = (float) (iRPoint.y * 0.001f);
-                    handle.Z = (float) iRPoint.z * 0.001f;
+                    handle.X = iRPoint.x;
+                    handle.Y = iRPoint.y;
+                    handle.Z = iRPoint.z;
 
 
                     List<int> indices = handle.GetIndices();
-                    
+
 
                     foreach (int index in indices)
                     {
 
-                        verts[index] = new Vector3(iRPoint.x , iRPoint.y, iRPoint.z );
+                        verts[index] = new Vector3(iRPoint.x, iRPoint.y, iRPoint.z);
                     }
                 }
 
@@ -166,7 +167,7 @@ public class Triangulator : MonoBehaviour
 
     }
 
-        private void DebugUpdate()
+    private void DebugUpdate()
     {
         if (screenMesh != null)
         {
@@ -290,11 +291,12 @@ public class Triangulator : MonoBehaviour
     public void TaskOnClick()
     {
 
-        if (handles != null) { 
-        foreach (GameObject handle in handles)
+        if (handles != null)
         {
-            DestroyImmediate(handle);
-        }
+            foreach (GameObject handle in handles)
+            {
+                DestroyImmediate(handle);
+            }
         }
         if (screen != null)
         {
@@ -333,7 +335,7 @@ public class Triangulator : MonoBehaviour
         List<Vector2> points = new List<Vector2>();
 
         IRPoint3D[] irPoints = udpScript.GetIRs();
-        if (irPoints.Length > 0)
+        if (irPoints != null && irPoints.Length > 0)
         {
 
             foreach (IRPoint3D irPoint in irPoints)
