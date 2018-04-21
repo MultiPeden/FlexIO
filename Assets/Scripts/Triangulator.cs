@@ -37,6 +37,7 @@ public class Triangulator : MonoBehaviour
     GameObject[] handles;
 
     UDPScript udpScript;
+    private float maxX, maxY, minY, minX;
 
     // Use this for initialization
     void Start()
@@ -83,9 +84,32 @@ public class Triangulator : MonoBehaviour
 
         // Vertex is TriangleNet.Geometry.Vertex
         Polygon polygon = new Polygon();
+
+        maxX = -1000;
+        maxY = -1000;
+        minY = 1000;
+        minX = 1000;
+        float x, y;
+
         foreach (Vector2 point in points)
         {
-            polygon.Add(new Vertex(point.x, point.y));
+
+            x = point.x;
+            y = point.y;
+
+            polygon.Add(new Vertex(x, y));
+
+            if (x > maxX)
+                maxX = x;
+            if (y > maxY)
+                maxY = y;
+            if (x < minX)
+                minX = x;
+            if (y < minY)
+                minY = y;
+
+
+
         }
 
         if (polygon.Count > 2)
@@ -137,6 +161,8 @@ public class Triangulator : MonoBehaviour
                 {
 
                     Handle handle = handles[i].GetComponent<Handle>();
+
+
 
                     IRPoint3D iRPoint = Array.Find(irs, element => element.id == handle.id);
 
@@ -253,17 +279,21 @@ public class Triangulator : MonoBehaviour
 
             // If you want to texture your terrain, UVs are important,
             // but I just use a flat color so put in dummy coords
-            uvs.Add(new Vector2((float)triangle.GetVertex(2).X, (float)triangle.GetVertex(2).Y));
-            uvs.Add(new Vector2((float)triangle.GetVertex(1).X, (float)triangle.GetVertex(1).Y));
-            uvs.Add(new Vector2((float)triangle.GetVertex(0).X, (float)triangle.GetVertex(0).Y));
+
+
+            uvs.Add(new Vector2(Mathf.InverseLerp(minX, maxX, (float)triangle.GetVertex(2).X), Mathf.InverseLerp(minY, maxY, (float)triangle.GetVertex(2).Y)));
+            uvs.Add(new Vector2(Mathf.InverseLerp(minX, maxX, (float)triangle.GetVertex(1).X), Mathf.InverseLerp(minY, maxY, (float)triangle.GetVertex(1).Y)));
+            uvs.Add(new Vector2(Mathf.InverseLerp(minX, maxX, (float)triangle.GetVertex(0).X), Mathf.InverseLerp(minY, maxY, (float)triangle.GetVertex(0).Y)));
         }
 
         // Create the actual Unity mesh object
-        screenMesh = new Mesh();
-        screenMesh.vertices = vertices.ToArray();
-        screenMesh.uv = uvs.ToArray();
-        screenMesh.triangles = triangles.ToArray();
-        screenMesh.normals = normals.ToArray();
+        screenMesh = new Mesh
+        {
+            vertices = vertices.ToArray(),
+            uv = uvs.ToArray(),
+            triangles = triangles.ToArray(),
+            normals = normals.ToArray()
+        };
         screenMesh.MarkDynamic();
 
         // Instantiate the GameObject which will display this chunk
@@ -271,6 +301,8 @@ public class Triangulator : MonoBehaviour
         screen.GetComponent<MeshFilter>().mesh = screenMesh;
         screen.GetComponent<MeshCollider>().sharedMesh = screenMesh;
         screen.transform.parent = transform;
+
+
 
     }
 

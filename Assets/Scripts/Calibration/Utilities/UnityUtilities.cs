@@ -68,7 +68,7 @@ namespace FlexIO
 
         #endregion Matrix Extensions
 
-    
+
 
     }
 
@@ -161,7 +161,7 @@ namespace FlexIO
             return retVal;
         }
 
-     
+
     }
 
     public class Unity2RAT

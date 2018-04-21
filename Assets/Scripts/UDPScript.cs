@@ -115,7 +115,7 @@ public class UDPScript : MonoBehaviour
             ir = new IRPoint3D
             {
                 id = j,
-                x = floatArray[i],
+                x = -1 * floatArray[i],
                 y = floatArray[i + 1],
                 z = floatArray[i + 2]
             };

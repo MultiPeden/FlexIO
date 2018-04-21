@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 
 
 
@@ -45,10 +44,10 @@ namespace FlexIO
 
         public void Awake()
         {
-          //  cam = this.GetComponent<Camera>();
-          //  LoadCalibrationData();
+            //  cam = this.GetComponent<Camera>();
+            //  LoadCalibrationData();
 
-          //  cam.enabled = true;
+            //  cam.enabled = true;
 
             initialized = true;
         }
@@ -98,9 +97,9 @@ namespace FlexIO
                 //// used by shadow etc...
                 //// this is the vertical field of view - fy
                 cam.aspect = (float)imageWidth / imageHeight;
-                float fieldOfViewRad = 2.0f * (float)Math.Atan((((double)(imageHeight)) / 2.0) / projConfig.cameraMatrix[1, 1]);
-                float fieldOfViewDeg = fieldOfViewRad / 3.14159265359f * 180.0f;
-                cam.fieldOfView = fieldOfViewDeg;
+
+                cam.fieldOfView = 2.0f * Mathf.Atan(imageHeight * 0.5f / (float)projConfig.cameraMatrix[1, 1]) * Mathf.Rad2Deg;
+
                 Matrix4x4 opencvProjMat = GetProjectionMatrix(projConfig.cameraMatrix, cam.nearClipPlane, cam.farClipPlane);
                 cam.projectionMatrix = UnityUtilities.ConvertRHtoLH(opencvProjMat);
 
@@ -124,21 +123,21 @@ namespace FlexIO
 
         private Matrix4x4 GetProjectionMatrix(FlexIO.Matrix intrinsics, float zNear, float zFar)
         {
-            float c_x = (float)intrinsics[0, 2];
-            float c_y = (float)intrinsics[1, 2];
+            float p_x = (float)intrinsics[0, 2];
+            float p_y = (float)intrinsics[1, 2];
 
             //the intrinsics are in Kinect coordinates: X - left, Y - up, Z, forward
             //we need the coordinates to be: X - right, Y - down, Z - forward
-            c_x = imageWidth - c_x;
-            c_y = imageHeight - c_y;
+            p_x = imageWidth - p_x;
+            p_y = imageHeight - p_y;
 
             // http://spottrlabs.blogspot.com/2012/07/opencv-and-opengl-not-always-friends.html
             // http://opencv.willowgarage.com/wiki/Posit
             Matrix4x4 projMat = new Matrix4x4();
             projMat[0, 0] = (float)(2.0 * intrinsics[0, 0] / imageWidth);
             projMat[1, 1] = (float)(2.0 * intrinsics[1, 1] / imageHeight);
-            projMat[2, 0] = (float)(-1.0f + 2 * c_x / imageWidth);
-            projMat[2, 1] = (float)(-1.0f + 2 * c_y / imageHeight);
+            projMat[2, 0] = (float)(-1.0f + 2 * p_x / imageWidth);
+            projMat[2, 1] = (float)(-1.0f + 2 * p_y / imageHeight);
 
             // Note this changed from previous code
             // see here: http://www.songho.ca/opengl/gl_projectionmatrix.html

@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Handle : MonoBehaviour {
+public class Handle : MonoBehaviour
+{
 
     public List<int> indices;
     public int id;
@@ -51,8 +51,8 @@ public class Handle : MonoBehaviour {
 
 
     /*
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         indices = null;
 
     }
@@ -67,7 +67,7 @@ public class Handle : MonoBehaviour {
         this.z = 0;
     }
 
-	
+
     public List<int> GetIndices()
     {
         return this.indices;
@@ -78,8 +78,9 @@ public class Handle : MonoBehaviour {
         return this.id;
     }
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update()
+    {
 
         transform.position = new Vector3(x, y, z);
     }
