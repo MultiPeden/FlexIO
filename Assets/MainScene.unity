@@ -136,8 +136,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 48713539}
-  m_LocalRotation: {x: 0.031401966, y: 0.004725891, z: -0.0008890802, w: 0.99949527}
-  m_LocalPosition: {x: -0.20200312, y: 0.14327157, z: -0.40672097}
+  m_LocalRotation: {x: 0.025265148, y: -0.008026088, z: 0.0056149736, w: 0.99963284}
+  m_LocalPosition: {x: -0.15036501, y: 0.14779104, z: -0.41033363}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1766620629}
@@ -179,7 +179,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 10
+  field of view: 24.799107
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -678,7 +678,7 @@ GameObject:
   - component: {fileID: 803323827}
   - component: {fileID: 803323826}
   m_Layer: 5
-  m_Name: Button2
+  m_Name: ButtonReset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

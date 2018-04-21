@@ -16,7 +16,7 @@ public class UDPScript : MonoBehaviour
 
     Thread receiveThread;
     UdpClient client;
-    private IRPoint3D[] irs;
+    private IRPoint[] irs;
     int portNumber = 11000;
 
 
@@ -105,14 +105,14 @@ public class UDPScript : MonoBehaviour
         int len = floatArray.Length / 3;
 
         message = "hej " + len + " " + (floatArray.Length);
-        IRPoint3D[] irs2 = new IRPoint3D[len];
-        IRPoint3D ir;
+        IRPoint[] irs2 = new IRPoint[len];
+        IRPoint ir;
         int id = 0;
 
         int i = 0;
         for (int j = 0; j < len; j++)
         {
-            ir = new IRPoint3D
+            ir = new IRPoint
             {
                 id = j,
                 x = -1 * floatArray[i],
@@ -169,7 +169,7 @@ public class UDPScript : MonoBehaviour
         return this.message;
     }
 
-    public IRPoint3D[] GetIRs()
+    public IRPoint[] GetIRs()
     {
 
 

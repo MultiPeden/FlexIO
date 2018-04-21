@@ -151,7 +151,7 @@ public class Triangulator : MonoBehaviour
 
         if (screenMesh != null)
         {
-            IRPoint3D[] irs = GetIrs();
+            IRPoint[] irs = GetIrs();
             handles = GameObject.FindGameObjectsWithTag("handle");
 
             if (handles.Length == irs.Length)
@@ -164,7 +164,7 @@ public class Triangulator : MonoBehaviour
 
 
 
-                    IRPoint3D iRPoint = Array.Find(irs, element => element.id == handle.id);
+                    IRPoint iRPoint = Array.Find(irs, element => element.id == handle.id);
 
                     handle.X = iRPoint.x;
                     handle.Y = iRPoint.y;
@@ -366,11 +366,11 @@ public class Triangulator : MonoBehaviour
     {
         List<Vector2> points = new List<Vector2>();
 
-        IRPoint3D[] irPoints = udpScript.GetIRs();
+        IRPoint[] irPoints = udpScript.GetIRs();
         if (irPoints != null && irPoints.Length > 0)
         {
 
-            foreach (IRPoint3D irPoint in irPoints)
+            foreach (IRPoint irPoint in irPoints)
             {
                 points.Add(new Vector2(irPoint.x, irPoint.y));
             }
@@ -385,7 +385,7 @@ public class Triangulator : MonoBehaviour
     }
 
 
-    private IRPoint3D[] GetIrs()
+    private IRPoint[] GetIrs()
     {
         return udpScript.GetIRs();
     }
