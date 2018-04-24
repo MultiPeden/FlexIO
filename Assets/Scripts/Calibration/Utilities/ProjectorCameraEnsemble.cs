@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Xml.Serialization;
-using System.Runtime.Serialization;
-using System.IO;
 using UnityEngine;
 
-//[assembly: ContractNamespaceAttribute("http://schemas.datacontract.org/2004/07/RoomAliveToolkit",
-//    ClrNamespace = "FlexIO")]
 
-//[assembly: ContractNamespace("RoomAliveToolkit",
-//   ClrNamespace = "FlexIO")]
+
 
 [assembly: ContractNamespaceAttribute("http://schemas.datacontract.org/2004/07/RoomAliveToolkit",
     ClrNamespace = "FlexIO")]
 
 namespace FlexIO
 {
+    [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/RoomAliveToolkit")]
 
-
-       [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/RoomAliveToolkit")]
-
-//    [DataContract]
     public class ProjectorCameraEnsemble
     {
         [DataMember]
@@ -38,7 +32,7 @@ namespace FlexIO
             {
                 pose = new Matrix(4, 4);
                 pose.Identity();
-                cameraMatrix = new Matrix(3,3);
+                cameraMatrix = new Matrix(3, 3);
                 cameraMatrix.Identity();
                 lensDistortion = new Matrix(2, 1);
             }

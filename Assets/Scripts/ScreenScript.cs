@@ -4,10 +4,10 @@ using TriangleNet.Geometry;
 using TriangleNet.Topology;
 using UnityEngine;
 
-public class Triangulator : MonoBehaviour
+public class ScreenScript : MonoBehaviour
 {
 
-    public bool debug;
+
 
     // The delaunay mesh
     private TriangleNet.Mesh triangulatorMesh = null;
@@ -39,13 +39,11 @@ public class Triangulator : MonoBehaviour
     UDPScript udpScript;
     private float maxX, maxY, minY, minX;
 
-    // Use this for initialization
+    // Initializes reference to the UDPScript in the DataReceiver GO 
     void Start()
     {
-        GameObject go = GameObject.Find("UDPScript");
+        GameObject go = GameObject.Find("DataReceiver");
         udpScript = (UDPScript)go.GetComponent(typeof(UDPScript));
-        debug = false;
-
     }
 
 
@@ -134,56 +132,46 @@ public class Triangulator : MonoBehaviour
 
     private void Update()
     {
-        if (debug)
-        {
-            DebugUpdate();
-        }
-        else
-        {
-            DefaultUpdate();
-        }
-
-
-    }
-
-    private void DefaultUpdate()
-    {
 
         if (screenMesh != null)
         {
             IRPoint[] irs = GetIrs();
-            handles = GameObject.FindGameObjectsWithTag("handle");
-
-            if (handles.Length == irs.Length)
+            if (irs != null)
             {
 
-                for (int i = 0; i < handles.Length; i++)
+
+                handles = GameObject.FindGameObjectsWithTag("handle");
+
+                if (handles.Length == irs.Length)
                 {
 
-                    Handle handle = handles[i].GetComponent<Handle>();
-
-
-
-                    IRPoint iRPoint = Array.Find(irs, element => element.id == handle.id);
-
-                    handle.X = iRPoint.x;
-                    handle.Y = iRPoint.y;
-                    handle.Z = iRPoint.z;
-
-
-                    List<int> indices = handle.GetIndices();
-
-
-                    foreach (int index in indices)
+                    for (int i = 0; i < handles.Length; i++)
                     {
 
-                        verts[index] = new Vector3(iRPoint.x, iRPoint.y, iRPoint.z);
-                    }
-                }
+                        Handle handle = handles[i].GetComponent<Handle>();
 
-                screenMesh.vertices = verts;
-                screenMesh.RecalculateBounds();
-                screenMesh.RecalculateNormals();
+
+
+                        IRPoint iRPoint = Array.Find(irs, element => element.id == handle.id);
+
+                        handle.X = iRPoint.x;
+                        handle.Y = iRPoint.y;
+                        handle.Z = iRPoint.z;
+
+
+                        List<int> indices = handle.GetIndices();
+
+
+                        foreach (int index in indices)
+                        {
+
+                            verts[index] = new Vector3(iRPoint.x, iRPoint.y, iRPoint.z);
+                        }
+                    }
+                    screenMesh.vertices = verts;
+                    //  screenMesh.RecalculateBounds();
+                    screenMesh.RecalculateNormals();
+                }
             }
             else
             {
@@ -193,25 +181,7 @@ public class Triangulator : MonoBehaviour
 
     }
 
-    private void DebugUpdate()
-    {
-        if (screenMesh != null)
-        {
-            handles = GameObject.FindGameObjectsWithTag("handle");
-            for (int i = 0; i < handles.Length; i++)
-            {
-                List<int> indices = handles[i].GetComponent<Handle>().GetIndices();
-                foreach (int index in indices)
-                {
 
-                    verts[index] = handles[i].transform.localPosition;
-                }
-            }
-            screenMesh.vertices = verts;
-            screenMesh.RecalculateBounds();
-            screenMesh.RecalculateNormals();
-        }
-    }
 
 
 
@@ -273,14 +243,12 @@ public class Triangulator : MonoBehaviour
 
             // Compute the normal - flat shaded, so the vertices all have the same normal
             Vector3 normal = Vector3.Cross(v1 - v0, v2 - v0);
+            normal = new Vector3(0, 0, 0);
             normals.Add(normal);
             normals.Add(normal);
             normals.Add(normal);
 
-            // If you want to texture your terrain, UVs are important,
-            // but I just use a flat color so put in dummy coords
-
-
+            // Calculation of UV coordinates, actual coordinates of the mesh is normalized into the range [0,1]
             uvs.Add(new Vector2(Mathf.InverseLerp(minX, maxX, (float)triangle.GetVertex(2).X), Mathf.InverseLerp(minY, maxY, (float)triangle.GetVertex(2).Y)));
             uvs.Add(new Vector2(Mathf.InverseLerp(minX, maxX, (float)triangle.GetVertex(1).X), Mathf.InverseLerp(minY, maxY, (float)triangle.GetVertex(1).Y)));
             uvs.Add(new Vector2(Mathf.InverseLerp(minX, maxX, (float)triangle.GetVertex(0).X), Mathf.InverseLerp(minY, maxY, (float)triangle.GetVertex(0).Y)));

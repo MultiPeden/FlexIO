@@ -171,9 +171,9 @@ public class UDPScript : MonoBehaviour
 
     public IRPoint[] GetIRs()
     {
-
-
-        return this.irs;
+        if (msgUpdated)
+            return this.irs;
+        return null;
     }
 
 
