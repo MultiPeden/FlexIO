@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts;
+using System;
 using System.Collections.Generic;
 using TriangleNet.Geometry;
 using TriangleNet.Topology;
@@ -35,6 +36,7 @@ public class ScreenScript : MonoBehaviour
     Vector3[] verts;
     Vector3 vertPos;
     GameObject[] handles;
+    UpdateTimer updateTimer;
 
     UDPScript udpScript;
     private float maxX, maxY, minY, minX;
@@ -44,6 +46,8 @@ public class ScreenScript : MonoBehaviour
     {
         GameObject go = GameObject.Find("DataReceiver");
         udpScript = (UDPScript)go.GetComponent(typeof(UDPScript));
+
+        updateTimer = new UpdateTimer();
     }
 
 
@@ -135,6 +139,7 @@ public class ScreenScript : MonoBehaviour
 
         if (screenMesh != null)
         {
+            updateTimer.StartUpdateTimer();
             IRPoint[] irs = GetIrs();
             if (irs != null)
             {
@@ -177,12 +182,16 @@ public class ScreenScript : MonoBehaviour
             {
                 Debug.Log(string.Format("Lost points, had {0} points, now have {1}", handles.Length, irs.Length));
             }
+            updateTimer.StopUpdateTimer(irs.Length);
         }
 
     }
 
 
-
+    private void OnApplicationQuit()
+    {
+        updateTimer.FlushTimer();
+    }
 
 
     public void MakeMesh()

@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23432953529209950}
   - component: {fileID: 114671278544183864}
   m_Layer: 0
-  m_Name: SphereHandlePrefab
+  m_Name: VertexHandlePrefab
   m_TagString: handle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
