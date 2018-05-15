@@ -136,8 +136,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 48713539}
-  m_LocalRotation: {x: 0.025265148, y: -0.008026088, z: 0.0056149736, w: 0.99963284}
-  m_LocalPosition: {x: -0.15036501, y: 0.14779104, z: -0.41033363}
+  m_LocalRotation: {x: -0.0049435906, y: 0.04662985, z: -0.0023721466, w: 0.9988972}
+  m_LocalPosition: {x: -0.08191637, y: -0.10811928, z: 0.15307017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1766620629}
@@ -179,7 +179,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 24.799107
+  field of view: 36.181942
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -815,7 +815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b97446d9fe418654180fc13251d2ef0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calibration: {fileID: 4900000, guid: 018d976fd228b6e489834a6c19e9dd70, type: 3}
+  calibration: {fileID: 4900000, guid: 488f6007a138555439b75d53e341761e, type: 3}
   test: Srceen
 --- !u!1 &1259693856
 GameObject:
@@ -1083,7 +1083,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2668a03281b7ce45a6b3b384b4c40a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 0
   screenPrefab: {fileID: 4760822391077712, guid: 595d41c5a0936e34ebad74588168c2ad,
     type: 2}
   handlePrefab: {fileID: 4336420464647636, guid: 16da7b53bc561e84e9dfadeb159fb587,

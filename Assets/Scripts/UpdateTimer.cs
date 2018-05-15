@@ -12,8 +12,8 @@ namespace Assets.Scripts
         public UpdateTimer()
         {
 
-            writer = new StreamWriter(@"C:\test\UpdateTimer.csv", append: true);
-            long FileLength = new FileInfo(@"C:\test\UpdateTimer.csv").Length;
+            writer = new StreamWriter(@"C:\test\timer\UpdateTimer.csv", append: true);
+            long FileLength = new FileInfo(@"C:\test\timer\UpdateTimer.csv").Length;
 
 
             ///    timerRes = new TimerRes();

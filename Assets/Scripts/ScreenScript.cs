@@ -174,7 +174,7 @@ public class ScreenScript : MonoBehaviour
                         }
                     }
                     screenMesh.vertices = verts;
-                    //  screenMesh.RecalculateBounds();
+                    screenMesh.RecalculateBounds();
                     screenMesh.RecalculateNormals();
                 }
             }

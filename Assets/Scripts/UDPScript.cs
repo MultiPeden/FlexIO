@@ -17,6 +17,8 @@ public class UDPScript : MonoBehaviour
     Thread receiveThread;
     UdpClient client;
     private IRPoint[] irs;
+    private IRPoint[] firstIrs;
+    bool first = true;
     int portNumber = 11000;
 
 
@@ -112,12 +114,23 @@ public class UDPScript : MonoBehaviour
         int i = 0;
         for (int j = 0; j < len; j++)
         {
+            float zo;
+
+            if (firstIrs == null)
+            {
+                zo = floatArray[i + 2];
+            }
+            else
+            {
+                zo = floatArray[i + 2];
+            }
+
             ir = new IRPoint
             {
                 id = j,
                 x = -1 * floatArray[i],
                 y = floatArray[i + 1],
-                z = floatArray[i + 2]
+                z = zo
             };
             i += 3;
 
@@ -125,6 +138,11 @@ public class UDPScript : MonoBehaviour
 
         }
 
+        if (firstIrs == null)
+        {
+            firstIrs = this.irs;
+            first = false;
+        }
         this.irs = irs2;
     }
 
